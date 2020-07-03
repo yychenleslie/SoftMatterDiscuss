@@ -51,21 +51,38 @@ frameData = np.concatenate((groupNumArray, positionNumArray, data), axis=1)
 numGroups = int(groupNumArray.shape[0]/numAtomsPerGroup)
 print('Number of groups: {}'.format(numGroups))
 
+# print(frameData)
+
 # Use a boolean mask to select one group. 
 # https://stackoverflow.com/questions/58079075/numpy-select-rows-based-on-condition
-def getGroupData(frameData, groupNum):
-    mask = frameData[:, 0] == groupNum
+def getOneGroupData(frameData, groupNum):
+    mask = frameData[:, 0] == groupNum 
     return frameData[mask, :]
 
-print(getGroupData(frameData, 2))
+print(getOneGroupData(frameData, 2))
 
 # Loop all group
 numGroups = 4
 for i in range(numGroups):
-    startGroup = getGroupData(frameData, i)
+    headGroup = getOneGroupData(frameData, i)
     for j in range(numGroups):
         # `i != j` indicates group `i` is not group `j`
         if i != j:
-            endGroup = getGroupData(frameData, j)
+            tailGroup = getOneGroupData(frameData, j)
+            tailGroupXYZ = tailGroup[:,2:]
+            # print(tailGroupXYZ.shape)
             # print(i, j)
-            
+            for k in range(numAtomsPerGroup):
+                headAtom = headGroup[k,:]
+                headAtomXYZ = headGroup[k,2:].reshape((1,-1))
+                # print(headAtomXYZ.shape)
+                # Get One-To-Five vectors
+                vectors = headAtomXYZ - tailGroupXYZ
+                print(vectors.shape)
+                # Calculate lengths of vectors
+                # -- To do @lfq --
+
+                # Save data or other operation
+                # -- To do @lfq --           
+
+
