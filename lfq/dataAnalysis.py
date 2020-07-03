@@ -57,12 +57,15 @@ def getGroupData(frameData, groupNum):
     mask = frameData[:, 0] == groupNum
     return frameData[mask, :]
 
-print(getGroupData(frameData = frameData, groupNum=2))
+print(getGroupData(frameData, 2))
 
 # Loop all group
 numGroups = 4
 for i in range(numGroups):
+    startGroup = getGroupData(frameData, i)
     for j in range(numGroups):
         # `i != j` indicates group `i` is not group `j`
         if i != j:
-            print(i, j)
+            endGroup = getGroupData(frameData, j)
+            # print(i, j)
+            
