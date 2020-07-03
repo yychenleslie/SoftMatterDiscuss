@@ -45,15 +45,24 @@ positionNumArray = np.reshape(positionNumArray, (2000, 1))
 # print(positionNumArray)
 
 # Concatenate groupNumArray, positionNumArray and data.
-data = np.concatenate((groupNumArray, positionNumArray, data), axis=1)
+frameData = np.concatenate((groupNumArray, positionNumArray, data), axis=1)
 # print(data)
 # print(data[0:20,:]) # data[:20,:]
 numGroups = int(groupNumArray.shape[0]/numAtomsPerGroup)
-print(numGroups)
+print('Number of groups: {}'.format(numGroups))
 
-class rod():
-    def __init__(self):
-        
+# Use a boolean mask to select one group. 
+# https://stackoverflow.com/questions/58079075/numpy-select-rows-based-on-condition
+def getGroupData(frameData, groupNum):
+    mask = frameData[:, 0] == groupNum
+    return frameData[mask, :]
 
-# for g in range(numRows):
-#     for
+print(getGroupData(frameData = frameData, groupNum=2))
+
+# Loop all group
+numGroups = 4
+for i in range(numGroups):
+    for j in range(numGroups):
+        # `i != j` indicates group `i` is not group `j`
+        if i != j:
+            print(i, j)
