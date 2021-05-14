@@ -1,0 +1,145 @@
+集群软件安装
+
+切换到自定义的软件安装目录`.yychen`:
+
+```bash
+cd 
+cd .yychen/
+```
+
+下载(克隆)一份LAMMPS的源码文件到本地，重命名为`mylammps`:
+
+```bash
+git clone -b unstable git@github.com:lammps/lammps.git mylammps
+```
+
+```bash
+cd lammps                # change to the LAMMPS distribution directory
+mkdir build; cd build    # create and use a build directory
+cmake -DCMAKE_INSTALL_PREFIX=/public/home/hj/.jackprogram/local -D PKG_MOLECULE=yes -D PKG_KSPACE=yes -D PKG_RIGID=yes ../cmake
+cmake --build .          # compilation (or type "make")
+```
+成功
+
+
+安装openmpi-3.1.5
+./configure --prefix=$HOME/.yychen/local
+make 
+make install
+成功
+ 
+安装cmake
+./configure --prefix=$HOME/.yychen/local
+失败
+/public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.14' not found (required by /public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake)
+/public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.18' not found (required by /public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake)
+/public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake: /usr/lib64/libstdc++.so.6: version `CXXABI_1.3.5' not found (required by /public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake)
+/public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.15' not found (required by /public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake)
+/public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.20' not found (required by /public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake)
+/public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake: /usr/lib64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by /public/home/yychen/.yychen/apps_bak/cmake-3.18.0/Bootstrap.cmk/cmake)
+
+忘记添加lib64那个库了
+export PATH="/public/home/yychen/.yychen/local/bin:$PATH"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/public/home/yychen/.yychen/local/lib"
+export LIBRARY_PATH="$LIBRARY_PATH:/public/home/yychen/.yychen/local/lib"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/public/home/yychen/.yychen/local/lib64"
+export LIBRARY_PATH="$LIBRARY_PATH:/public/home/yychen/.yychen/local/lib64"
+./configure --prefix=$HOME/.yychen/local
+make 
+make install 
+成功
+
+
+先安装glibc(可以不用安装)
+./configure --prefix=$HOME/.yychen/local
+configure: error: you must configure in a separate build directory
+失败
+mkdir build
+cd build
+../configure --prefix=$HOME/.yychen/local
+
+configure: error: 
+*** These critical programs are missing or too old: as GNU ld bison
+失败
+These critical programs are missing or too old: as GNU ld
+失败
+configure: error: 
+*** LD_LIBRARY_PATH shouldn't contain the current directory when
+*** building glibc. Please change the environment variable
+*** and run configure again.
+失败
+echo $LD_LIBRARY_PATH
+/public/software/mpi/openmpi-16-intel/lib:/public/software/intel/composer_xe_2011_sp1.7.256/compiler/lib/intel64:/public/software/intel/composer_xe_2011_sp1.7.256/mkl/lib/intel64:/public/software/mpi/openmpi1.4.5-intel/lib:/public/software/mpi/openmpi1.4.5-intel/lib::/public/home/yychen/.yychen/local/lib
+将后面的两个::改为:
+export LD_LIBRARY_PATH=/public/software/mpi/openmpi-16-intel/lib:/public/software/intel/composer_xe_2011_sp1.7.256/compiler/lib/intel64:/public/software/intel/composer_xe_2011_sp1.7.256/mkl/lib/intel64:/public/software/mpi/openmpi1.4.5-intel/lib:/public/software/mpi/openmpi1.4.5-intel/lib:/public/home/yychen/.yychen/local/lib
+
+echo $LD_LIBRARY_PATH
+/public/software/mpi/openmpi-16-intel/lib:/public/software/intel/composer_xe_2011_sp1.7.256/compiler/lib/intel64:/public/software/intel/composer_xe_2011_sp1.7.256/mkl/lib/intel64:/public/software/mpi/openmpi1.4.5-intel/lib:/public/software/mpi/openmpi1.4.5-intel/lib:/public/home/yychen/.yychen/local/lib
+
+../configure --prefix=$HOME/.yychen/local
+configure: error: GNU libc requires kernel header files from
+Linux 3.2.0 or later to be installed before configuring.
+失败
+
+
+先安装Linux的头文件
+https://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.63.tar.gz
+
+/public/home/yychen/.yychen/apps_bak/linux-3.2.63/include/linux
+
+
+
+先安装 binutils-2.25.1
+./configure --prefix=$HOME/.yychen/local
+make 
+make install
+成功
+
+先安装bison 3.0.4
+./configure --prefix=$HOME/.yychen/local
+make 
+make install
+成功
+
+
+
+先安装gcc
+./configure --prefix=$HOME/.yychen/local --with-gmp-include=/public/home/yychen/.yychen/local/include --with-gmp-lib=/public/home/yychen/.yychen/local/lib  --with-mpfr-include=/public/home/yychen/.yychen/local/include --with-mpfr-lib=/public/home/yychen/.yychen/local/lib  --with-mpc-include=/public/home/yychen/.yychen/local/include --with-mpc-lib=/public/home/yychen/.yychen/local/lib 
+失败
+configure: error: Building GCC requires GMP 4.2+, MPFR 2.4.0+ and MPC 0.8.0+.
+Try the --with-gmp, --with-mpfr and/or --with-mpc options to specify
+
+make
+*** LIBRARY_PATH shouldn't contain the current directory when
+*** building gcc. Please change the environment variable
+*** and run configure again.
+失败
+unset LIBRARY_PATH
+make
+make install
+成功
+
+
+先安装 gmp
+./configure --prefix=$HOME/.yychen/local
+make
+make install 
+成功
+
+先安装 mpfr-3.1.6.tar.gz
+./configure --prefix=$HOME/.yychen/local
+make
+make install
+成功 
+
+先安装  MPC
+./configure --prefix=$HOME/.yychen/local --with-mpfr-include=/public/home/yychen/.yychen/local/include --with-mpfr-lib=/public/home/yychen/.yychen/local/lib
+make
+make install 
+成功
+
+
+
+
+
+
